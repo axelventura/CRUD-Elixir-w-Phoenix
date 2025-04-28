@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   db:
     image: mysql:8
@@ -26,15 +28,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-jenkins
+    user: root                       # <— Ejecutar todo el contenedor como root
+    privileged: true                 # <— Para asegurarnos de que tiene permisos elevados
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock  # Permite que Jenkins use Docker del host
-      - ./jenkins:/var/jenkins_home  # Configuración y persistencia de Jenkins
-    privileged: true  # Para garantizar que Jenkins tenga acceso completo a Docker
-    environment:
-      DOCKER_HOST: "unix:///var/run/docker.sock"  # Asegura que Jenkins se conecte correctamente al Docker del host
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins:/var/jenkins_home
 
 volumes:
   mysql-data:
