@@ -1,21 +1,16 @@
-FROM elixir:1.18.2
+FROM jenkins/jenkins:lts
 
-RUN mix local.hex --force && mix local.rebar --force
+USER root
 
-# Instalar Node.js para assets
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
-  && apt-get install -y nodejs
+# Instalar docker y docker-compose
+RUN apt-get update && apt-get install -y \
+    docker.io \
+    docker-compose \
+    curl \
+    sudo \
+    && apt-get clean
 
-WORKDIR /app
+# Dar permisos al usuario Jenkins para usar docker
+RUN usermod -aG docker jenkins
 
-COPY mix.exs mix.lock ./
-COPY config config
-RUN mix deps.get
-
-COPY . .
-
-RUN mix compile
-
-EXPOSE 4000
-
-CMD ["mix", "phx.server"]
+USER jenkins
