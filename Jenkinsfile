@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'windows' }  // Asegúrate de que 'windows' sea el nombre de tu nodo de Windows
+    agent any
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
     }
