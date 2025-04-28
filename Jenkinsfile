@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    bat "docker-compose -f ${DOCKER_COMPOSE_FILE} build"
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} build"
                 }
             }
         }
