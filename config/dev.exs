@@ -2,14 +2,16 @@ import Config
 
 # Configure your database
 config :tienda, Tienda.Repo,
-username: "root",
-password: "123456",
-database: "tienda",
-hostname: "127.0.0.1",
-port: 3306,
-show_sensitive_data_on_connection_error: true,
-pool_size: 10,
-adapter: Ecto.Adapters.MyXQL
+  username: "root",
+  password: "123456",
+  database: "tienda",
+  hostname: "db",
+  port: 3306,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 20,
+  adapter: Ecto.Adapters.MyXQL
+
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -19,7 +21,7 @@ adapter: Ecto.Adapters.MyXQL
 # Binding to loopback ipv4 address prevents access from other machines.
 config :tienda, TiendaWeb.Endpoint,
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,

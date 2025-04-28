@@ -19,7 +19,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    bat "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d"
+                    bat "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
+                    bat "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
                     bat "docker ps"
                     bat "docker-compose -f ${DOCKER_COMPOSE_FILE} logs"
                 }
