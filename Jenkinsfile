@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Clonar repositorio') {
       steps {
-        git branch: 'main', url: 'https://github.com/axelventura/tienda.git'
+        git branch: 'main', url: 'https://github.com/axelventura/CRUD-Elixir-w-Phoenix.git'
       }
     }
 
