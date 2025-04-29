@@ -35,8 +35,5 @@ tienda-*.tar
 npm-debug.log
 /assets/node_modules/
 
-_build/
-deps/
-priv/static/
 
 
