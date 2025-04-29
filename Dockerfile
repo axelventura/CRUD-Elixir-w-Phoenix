@@ -3,7 +3,7 @@ FROM elixir:1.18.2
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-RUN apk add --no-cache nodejs npm git build-base
+RUN apt-get update && apt-get install -y nodejs npm git build-essential
 
 WORKDIR /app
 
