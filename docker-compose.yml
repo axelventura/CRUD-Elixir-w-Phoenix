@@ -1,43 +1,40 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  db:
-    image: mysql:8
-    restart: always
-    environment:
-      MYSQL_DATABASE: tienda
-      MYSQL_ROOT_PASSWORD: "123456"
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-
-  app:
+  phoenix:
     build: .
-    command: mix phx.server
     ports:
       - "4000:4000"
-    environment:
-      DATABASE_URL: ecto://root:123456@db/tienda
-    depends_on:
-      - db
     volumes:
       - .:/app
+    environment:
+      MIX_ENV: dev
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      DB_NAME: tienda
+      DB_HOST: db
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3310:3306"   # Cambiamos aquí (de 3307 a 3310)
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: tienda4
+    volumes:
+      - db_data:/var/lib/mysql
 
   jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile-jenkins
-    user: root                       # <— Ejecutar todo el contenedor como root
-    privileged: true                 # <— Para asegurarnos de que tiene permisos elevados
-    environment:
-      DOCKER_HOST: unix:///var/run/docker.sock
+    image: jenkins/jenkins:lts
+    user: root
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8090:8080"   # Cambiamos aquí (de 8081 a 8090)
     volumes:
+      - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./jenkins:/var/jenkins_home
 
 volumes:
-  mysql-data:
+  db_data:
+  jenkins_home:

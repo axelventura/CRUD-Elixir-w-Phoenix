@@ -1,30 +1,42 @@
 pipeline {
-    agent any
-    environment {
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+  agent any
+
+  stages {
+    stage('Clonar repositorio') {
+      steps {
+        git branch: 'main', url: 'https://github.com/axelventura/tienda.git'
+      }
     }
-    stages {
-        stage('Clonar') {
-            steps {
-                git url: 'https://github.com/axelventura/CRUD-Elixir-w-Phoenix.git', branch: 'main'
-            }
-        }
-        stage('Build') {
-            steps {
-                script {
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} build"
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                script {
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
-                    sh "docker ps"
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} logs"
-                }
-            }
-        }
+
+    stage('Construir imagen') {
+      steps {
+        sh 'docker-compose build'
+      }
     }
+
+    stage('Levantar servicios') {
+      steps {
+        sh 'docker-compose up -d'
+      }
+    }
+
+    stage('Pruebas Laravel') {
+      steps {
+        sh 'docker-compose exec laravel php artisan test || true'
+      }
+    }
+
+    stage('Pruebas Phoenix') {
+      steps {
+        sh 'docker-compose exec phoenix mix test || true'
+      }
+    }
+  }
+
+  post {
+    always {
+      echo 'Finalizando...'
+      sh 'docker-compose down'
+    }
+  }
 }
